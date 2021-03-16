@@ -1,8 +1,8 @@
 ﻿using BistHub.Api.Common;
+using BistHub.Api.Data;
 using BistHub.Api.Dtos;
 using BistHub.Api.Exceptions;
 using BistHub.Api.Extensions;
-using BistHub.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;

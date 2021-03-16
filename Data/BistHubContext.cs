@@ -1,11 +1,9 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
 using Models;
 
 #nullable disable
 
-namespace BistHub.Data
+namespace BistHub.Api.Data
 {
     public partial class BistHubContext : DbContext
     {
@@ -25,6 +23,7 @@ namespace BistHub.Data
         public virtual DbSet<Stock> Stocks { get; set; }
         public virtual DbSet<StockList> StockLists { get; set; }
         public virtual DbSet<StockPrice> StockPrices { get; set; }
+        public virtual DbSet<StockPriceView> StockPriceViews { get; set; }
         public virtual DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -1,19 +1,12 @@
+using BistHub.Api.Data;
 using BistHub.Api.Extensions;
-using BistHub.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BistHub.Api
 {
@@ -40,6 +33,8 @@ namespace BistHub.Api
 
             services.AddDbContext<BistHubContext>(options =>
                 options.UseNpgsql(Configuration["ConnectionString"]).EnableSensitiveDataLogging());
+
+            services.AddHostedService<Jobs.StockPriceCollectionJob>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
