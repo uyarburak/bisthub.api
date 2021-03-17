@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace BistHub.Api.Extensions
 {
@@ -6,7 +7,7 @@ namespace BistHub.Api.Extensions
     {
         public static string GetUsername(this HttpContext context)
         {
-            return "burakuyar"; //TODO change after implement authentication/authorization
+            return context.User.FindFirst(ClaimTypes.Email)?.Value;
         }
     }
 }

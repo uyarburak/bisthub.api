@@ -1,3 +1,4 @@
+using BistHub.Api.Common;
 using BistHub.Api.Data;
 using BistHub.Api.Extensions;
 using Microsoft.AspNetCore.Builder;
@@ -22,18 +23,30 @@ namespace BistHub.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddSerilog(Configuration);
             services.AddControllers().AddNewtonsoftJson();
             services.AddSwaggerGen(c =>
             {
+                c.EnableAnnotations();
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BistHub.Api", Version = "v1" });
+                //c.AddSwaggerSecurityDefinition(Configuration);
+                c.AddSwaggerSecurityDefinition();
             });
             services.AddSwaggerGenNewtonsoftSupport();
 
+            // Configure configs
+            services.Configure<FirebaseConfig>(Configuration.GetSection("Firebase"));
+
+            // Configure logger
+            services.AddSerilog(Configuration);
+
+            // Configure authentication
+            services.AddFirebaseAuthentication(Configuration["Firebase:AppName"]);
+
+            // Configure EF Core
             services.AddDbContext<BistHubContext>(options =>
                 options.UseNpgsql(Configuration["ConnectionString"]).EnableSensitiveDataLogging());
 
+            // Configure background jobs
             services.AddHostedService<Jobs.StockPriceCollectionJob>();
         }
 
@@ -44,7 +57,11 @@ namespace BistHub.Api
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BistHub.Api v1"));
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "BistHub.Api v1");
+                    c.AddOAuthUi(Configuration["Firebase:ClientId"]);
+                });
             }
 
             app.UseMiddleware<Middlewares.TraceLoggerMiddleware>();
@@ -54,6 +71,7 @@ namespace BistHub.Api
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

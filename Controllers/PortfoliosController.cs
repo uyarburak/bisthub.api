@@ -3,6 +3,7 @@ using BistHub.Api.Data;
 using BistHub.Api.Dtos;
 using BistHub.Api.Exceptions;
 using BistHub.Api.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace BistHub.Api.Controllers
 {
-    [ApiController]
+    [ApiController, Authorize]
     [Route("api/v1/[controller]")]
     public class PortfoliosController : ControllerBase
     {
