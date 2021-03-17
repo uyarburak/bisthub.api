@@ -104,7 +104,10 @@ namespace BistHub.Api.Controllers
         [Swashbuckle.AspNetCore.Annotations.SwaggerOperation("Removes the position from portfolio")]
         public async Task<BaseResponse> DeletePosition([FromRoute] Guid portfolioId, [FromRoute] int positionId, CancellationToken cancellationToken)
         {
-            var position = await _db.Positions.FindAsync(new object[] { positionId }, cancellationToken);
+            var position = await _db.Positions
+                .Include(x => x.Portfolio)
+                .FirstOrDefaultAsync(x => x.Id == positionId, cancellationToken);
+            //await _db.Positions.FindAsync(new object[] { positionId }, cancellationToken);
             if (position == null || position.PortfolioId != portfolioId)
                 throw new BistHubException(404, Errors.PositionNotFound, "Pozisyon bulunamadı");
             var portfolio = position.Portfolio;
@@ -119,7 +122,39 @@ namespace BistHub.Api.Controllers
             var removed = (await _db.SaveChangesAsync(cancellationToken)) == 1;
             if (removed)
                 return BaseResponse.Successful();
-            throw new Exceptions.BistHubException(500, Errors.PositionNotRemoved, "Pozisyon silinirken hata meydana geldi");
+            throw new BistHubException(500, Errors.PositionNotRemoved, "Pozisyon silinirken hata meydana geldi");
+        }
+
+        [HttpPut("{portfolioId}/positions/{positionId}")]
+        [Swashbuckle.AspNetCore.Annotations.SwaggerOperation("Updates the position of portfolio")]
+        public async Task<BaseResponse<PositionDto>> UpdatePosition([FromRoute] Guid portfolioId, [FromRoute] int positionId, [FromBody] UpdatePositionRequest request, CancellationToken cancellationToken)
+        {
+            var position = await _db.Positions
+                .Include(x => x.Portfolio)
+                .FirstOrDefaultAsync(x => x.Id == positionId, cancellationToken);
+            //await _db.Positions.FindAsync(new object[] { positionId }, cancellationToken);
+            if (position == null || position.PortfolioId != portfolioId)
+                throw new BistHubException(404, Errors.PositionNotFound, "Pozisyon bulunamadı");
+            var portfolio = position.Portfolio;
+            //var portfolio = await _db.Portfolios.FindAsync(new[] { portfolioId }, cancellationToken);
+            if (portfolio == null)
+                throw new BistHubException(404, Errors.PortfolioNotFound, "Portföy bulunamadı");
+            if (portfolio.Username != HttpContext.GetUsername())
+                throw new BistHubException(403, Errors.NotOwnThePortfolio, "Portföye erişim yetkiniz yok");
+
+            position.BuyDate = request.BuyDate;
+            position.BuyPrice = request.BuyPrice;
+            position.Amount = request.Amount;
+            position.PaidFee = request.PaidFee;
+            position.SellDate = request.SellDate;
+            position.SellPrice = request.SellPrice;
+            position.Updated = DateTime.Now;
+            _db.Positions.Update(position);
+
+            var updated = (await _db.SaveChangesAsync(cancellationToken)) == 1;
+            if (updated)
+                return BaseResponse<PositionDto>.Successful(position.ToPositionDto());
+            throw new BistHubException(500, Errors.PositionNotRemoved, "Pozisyon güncellenirken hata meydana geldi");
         }
 
         [HttpGet("{portfolioId}/positions/open")]

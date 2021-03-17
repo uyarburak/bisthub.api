@@ -9,6 +9,7 @@
         public const string PortfolioNotFound = "PORTFOLIO_NOT_FOUND";
         public const string NotOwnThePortfolio = "NOT_OWN_THE_PORTFOLIO";
         public const string PositionNotRemoved = "POSITION_NOT_REMOVED";
+        public const string PositionNotUpdated = "POSITION_NOT_UPDATED";
         public const string StockNotFound = "STOCK_NOT_FOUND";
     }
 }
