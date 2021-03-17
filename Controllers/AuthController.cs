@@ -17,6 +17,7 @@ namespace BistHub.Api.Controllers
             _firebaseConfig = options.Value;
         }
         [HttpPost]
+        [Swashbuckle.AspNetCore.Annotations.SwaggerOperation("Returns firebase auth tokens")]
         public async Task<ActionResult> GetToken([FromForm] LoginInfo loginInfo)
         {
             string uri = $"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={_firebaseConfig.ApiKey}";

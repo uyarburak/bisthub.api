@@ -26,6 +26,7 @@ namespace BistHub.Api.Controllers
         }
 
         [HttpGet]
+        [Swashbuckle.AspNetCore.Annotations.SwaggerOperation("Returns all portfolios of user")]
         public async Task<BaseListResponse<PortfolioDto>> GetPortfolios(CancellationToken cancellationToken)
         {
             var portfolios = await _db.Portfolios
@@ -35,6 +36,7 @@ namespace BistHub.Api.Controllers
         }
 
         [HttpPost]
+        [Swashbuckle.AspNetCore.Annotations.SwaggerOperation("Creates new portfolio")]
         public async Task<BaseResponse<PortfolioDto>> CreatePortfolio([FromBody] CreatePortfolioRequest request, CancellationToken cancellationToken)
         {
             var portfolio = new Portfolio
@@ -51,6 +53,7 @@ namespace BistHub.Api.Controllers
         }
 
         [HttpPut("{portfolioId}/title")]
+        [Swashbuckle.AspNetCore.Annotations.SwaggerOperation("Updates portfolio's title")]
         public async Task<BaseResponse<PortfolioDto>> UpdatePortfolioTitle([FromRoute] Guid portfolioId, [FromBody] CreatePortfolioRequest request, CancellationToken cancellationToken)
         {
             var portfolio = await TryFindPortfolio(portfolioId, cancellationToken);
@@ -63,6 +66,7 @@ namespace BistHub.Api.Controllers
         }
 
         [HttpGet("{portfolioId}/positions")]
+        [Swashbuckle.AspNetCore.Annotations.SwaggerOperation("Returns positions of portfolio")]
         public async Task<BaseListResponse<PositionDto>> GetPositions([FromRoute] Guid portfolioId, CancellationToken cancellationToken)
         {
             var portfolio = await TryFindPortfolio(portfolioId, cancellationToken);
@@ -74,6 +78,7 @@ namespace BistHub.Api.Controllers
         }
 
         [HttpPost("{portfolioId}/positions")]
+        [Swashbuckle.AspNetCore.Annotations.SwaggerOperation("Create an open position for portfolio")]
         public async Task<BaseResponse<PositionDto>> CreatePosition([FromRoute] Guid portfolioId, [FromBody] CreatePositionRequest request, CancellationToken cancellationToken)
         {
             var portfolio = await TryFindPortfolio(portfolioId, cancellationToken);
@@ -96,6 +101,7 @@ namespace BistHub.Api.Controllers
         }
 
         [HttpDelete("{portfolioId}/positions/{positionId}")]
+        [Swashbuckle.AspNetCore.Annotations.SwaggerOperation("Removes the position from portfolio")]
         public async Task<BaseResponse> DeletePosition([FromRoute] Guid portfolioId, [FromRoute] int positionId, CancellationToken cancellationToken)
         {
             var position = await _db.Positions.FindAsync(new object[] { positionId }, cancellationToken);
@@ -117,6 +123,7 @@ namespace BistHub.Api.Controllers
         }
 
         [HttpGet("{portfolioId}/positions/open")]
+        [Swashbuckle.AspNetCore.Annotations.SwaggerOperation("Returns only open positions of the portfolio")]
         public async Task<BaseListResponse<PositionDto>> GetOpenPositions([FromRoute] Guid portfolioId, CancellationToken cancellationToken)
         {
             var portfolio = await TryFindPortfolio(portfolioId, cancellationToken);
@@ -128,6 +135,7 @@ namespace BistHub.Api.Controllers
         }
 
         [HttpGet("{portfolioId}/positions/close")]
+        [Swashbuckle.AspNetCore.Annotations.SwaggerOperation("Returns only close positions of the portfolio")]
         public async Task<BaseListResponse<PositionDto>> GetClosePositions([FromRoute] Guid portfolioId, CancellationToken cancellationToken)
         {
             var portfolio = await TryFindPortfolio(portfolioId, cancellationToken);

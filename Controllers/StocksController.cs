@@ -25,6 +25,7 @@ namespace BistHub.Api.Controllers
         }
 
         [HttpGet]
+        [Swashbuckle.AspNetCore.Annotations.SwaggerOperation("Returns all stocks")]
         public async Task<BaseListResponse<StockDto>> GetStocks(CancellationToken cancellationToken)
         {
             var stocks = await _db.Stocks.ToListAsync(cancellationToken);
@@ -32,6 +33,7 @@ namespace BistHub.Api.Controllers
         }
 
         [HttpGet("{stockCode}")]
+        [Swashbuckle.AspNetCore.Annotations.SwaggerOperation("Returns the stock by id")]
         public async Task<BaseResponse<StockDto>> GetStockById([FromRoute] string stockCode, CancellationToken cancellationToken)
         {
             var stock = await _db.Stocks.FindAsync(new[] { stockCode }, cancellationToken);
@@ -41,6 +43,7 @@ namespace BistHub.Api.Controllers
         }
 
         [HttpGet("favorites")]
+        [Swashbuckle.AspNetCore.Annotations.SwaggerOperation("Returns all favorites stocks of the user")]
         public async Task<BaseListResponse<StockDto>> GetFavoriteStocks(CancellationToken cancellationToken)
         {
             var favorites = await _db.Favorites
@@ -52,6 +55,7 @@ namespace BistHub.Api.Controllers
         }
 
         [HttpPut("favorites")]
+        [Swashbuckle.AspNetCore.Annotations.SwaggerOperation("Updates user's favorite stocks")]
         public async Task<BaseResponse<int>> UpdateFavoriteStocks([FromBody] string[] stocks, CancellationToken cancellationToken)
         {
             _db.Favorites.RemoveRange(_db.Favorites.Where(x => x.Username == HttpContext.GetUsername()));
