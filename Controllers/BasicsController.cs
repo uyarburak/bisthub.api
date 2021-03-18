@@ -22,6 +22,22 @@ namespace BistHub.Api.Controllers
             _googleSheetsConfig = options.Value;
         }
 
+        [HttpGet("custom")]
+        public async Task<BaseListResponse<string>> GetCustomSheets(CancellationToken cancellationToken)
+        {
+            return BaseListResponse<string>.Successful(_googleSheetsConfig.CustomSheets.Keys);
+        }
+
+        [HttpGet("custom/{sheetName}")]
+        public async Task<BaseListResponse<List<object>>> GetCustomSheet([FromRoute] string sheetName, CancellationToken cancellationToken)
+        {
+            if (!_googleSheetsConfig.CustomSheets.ContainsKey(sheetName))
+                throw new Exceptions.BistHubException(404, "CUSTOM_SHEET_NOT_FOUND", "Dosya bulunamadı");
+            return BaseListResponse<List<object>>.Successful(
+                await GetSheet(_googleSheetsConfig.CustomSheets[sheetName], cancellationToken)
+            );
+        }
+
         [HttpGet("autoBalance")]
         public async Task<BaseListResponse<List<object>>> GetAutoBalanceSheet(CancellationToken cancellationToken)
         {
@@ -102,8 +118,8 @@ namespace BistHub.Api.Controllers
             var result = JsonConvert.DeserializeObject<SpreadSheetResponse>(response);
 
             return result.Values
-                .Where(x => !string.IsNullOrWhiteSpace(x[0]?.ToString()))
-                .Select(x => x.Select(x => x is string && (x.Equals("#N/A ()") || x.Equals("#DIV/0! ()")) ? null : x).ToList());
+                .Where(a => a.Any(x => x is not string || (!string.IsNullOrWhiteSpace((string) x) && !x.Equals("#N/A ()") && !x.Equals("#DIV/0! ()"))))
+                .Select(a => a.Select(x => x is string && (x.Equals("#N/A ()") || x.Equals("#DIV/0! ()")) ? null : x).ToList());
         }
 
         private static readonly HttpClient client = new HttpClient();

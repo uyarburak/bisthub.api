@@ -1,4 +1,6 @@
-﻿namespace BistHub.Api.Common
+﻿using System.Collections.Generic;
+
+namespace BistHub.Api.Common
 {
     public class FirebaseConfig
     {
@@ -11,5 +13,6 @@
     {
         public string ApiKey { get; set; }
         public string SheetId { get; set; }
+        public Dictionary<string, string> CustomSheets { get; set; }
     }
 }
