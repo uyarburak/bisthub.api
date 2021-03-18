@@ -6,4 +6,10 @@
         public string AppName { get; set; }
         public string ClientId { get; set; }
     }
+
+    public class GoogleSheetsConfig
+    {
+        public string ApiKey { get; set; }
+        public string SheetId { get; set; }
+    }
 }

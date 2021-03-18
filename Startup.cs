@@ -35,6 +35,7 @@ namespace BistHub.Api
 
             // Configure configs
             services.Configure<FirebaseConfig>(Configuration.GetSection("Firebase"));
+            services.Configure<GoogleSheetsConfig>(Configuration.GetSection("GoogleSheet"));
 
             // Configure logger
             services.AddSerilog(Configuration);
