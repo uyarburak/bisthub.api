@@ -13,18 +13,12 @@
             };
         }
 
-        public static new BaseResponse<T> Fail(string message)
-        {
-            return Fail(new ErrorModel(null, message));
-        }
-
-        public static new BaseResponse<T> Fail(ErrorModel error)
+        public static new BaseResponse<T> Fail(string errorCode, string message = null)
         {
             return new BaseResponse<T>
             {
-                Success = false,
-                Message = error.Description,
-                Error = error
+                ErrorCode = errorCode,
+                Message = message
             };
         }
     }
@@ -32,23 +26,8 @@
     public class BaseResponse
     {
         public bool Success { get; set; }
-        public ErrorModel Error { get; set; }
+        public string ErrorCode { get; set; }
         public string Message { get; set; }
-
-        public static BaseResponse Fail(string message)
-        {
-            return Fail(new ErrorModel(null, message));
-        }
-
-        public static BaseResponse Fail(ErrorModel error)
-        {
-            return new BaseResponse
-            {
-                Success = false,
-                Message = error.Description,
-                Error = error
-            };
-        }
 
         public static BaseResponse Successful(string infoMessage = null)
         {
@@ -58,17 +37,14 @@
                 Message = infoMessage
             };
         }
-    }
 
-    public class ErrorModel
-    {
-        public ErrorModel(string code, string description)
+        public static BaseResponse Fail(string errorCode, string message = null)
         {
-            Code = code;
-            Description = description;
+            return new BaseResponse
+            {
+                ErrorCode = errorCode,
+                Message = message
+            };
         }
-
-        public string Code { get; set; }
-        public string Description { get; set; }
     }
 }

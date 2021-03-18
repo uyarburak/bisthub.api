@@ -1,6 +1,7 @@
 using BistHub.Api.Common;
 using BistHub.Api.Data;
 using BistHub.Api.Extensions;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +24,14 @@ namespace BistHub.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddNewtonsoftJson();
+            services
+                .AddControllers()
+                .AddNewtonsoftJson()
+                .AddFluentValidation(fv => {
+                    fv.RegisterValidatorsFromAssemblyContaining<Startup>();
+                    fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
+                });
+
             services.AddSwaggerGen(c =>
             {
                 c.EnableAnnotations();

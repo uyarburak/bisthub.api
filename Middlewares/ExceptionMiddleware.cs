@@ -40,7 +40,7 @@ namespace BistHub.Api.Middlewares
                 {
                     context.Response.ContentType = "application/json";
                     context.Response.StatusCode = e.HttpCode;
-                    var response = BaseResponse.Fail(new ErrorModel(e.ErrorCode, e.Message));
+                    var response = BaseResponse.Fail(e.ErrorCode, e.Message);
                     await context.Response.WriteAsJsonAsync(response);
                 }
             }
