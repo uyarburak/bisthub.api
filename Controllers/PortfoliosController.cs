@@ -6,7 +6,7 @@ using BistHub.Api.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Models;
+using BistHub.Api.Models;
 using System;
 using System.Linq;
 using System.Threading;

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 #nullable disable
 
-namespace Models
+namespace BistHub.Api.Models
 {
     [Table("stocks")]
     public partial class Stock
@@ -15,8 +15,10 @@ namespace Models
         {
             Favorites = new HashSet<Favorite>();
             Positions = new HashSet<Position>();
+            StockFinancials = new HashSet<StockFinancial>();
             StockLists = new HashSet<StockList>();
             StockPrices = new HashSet<StockPrice>();
+            StockProfitabilities = new HashSet<StockProfitability>();
         }
 
         [Key]
@@ -39,14 +41,21 @@ namespace Models
         [Column("investing_url")]
         [StringLength(255)]
         public string InvestingUrl { get; set; }
+        [Column("sector")]
+        [StringLength(24)]
+        public string Sector { get; set; }
 
         [InverseProperty(nameof(Favorite.StockCodeNavigation))]
         public virtual ICollection<Favorite> Favorites { get; set; }
         [InverseProperty(nameof(Position.StockCodeNavigation))]
         public virtual ICollection<Position> Positions { get; set; }
+        [InverseProperty(nameof(StockFinancial.StockCodeNavigation))]
+        public virtual ICollection<StockFinancial> StockFinancials { get; set; }
         [InverseProperty(nameof(StockList.StockCodeNavigation))]
         public virtual ICollection<StockList> StockLists { get; set; }
         [InverseProperty(nameof(StockPrice.StockCodeNavigation))]
         public virtual ICollection<StockPrice> StockPrices { get; set; }
+        [InverseProperty(nameof(StockProfitability.StockCodeNavigation))]
+        public virtual ICollection<StockProfitability> StockProfitabilities { get; set; }
     }
 }

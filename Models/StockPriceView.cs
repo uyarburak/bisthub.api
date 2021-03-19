@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 #nullable disable
 
-namespace Models
+namespace BistHub.Api.Models
 {
     [Keyless]
     [Table("stock_price_view")]

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 #nullable disable
 
-namespace Models
+namespace BistHub.Api.Models
 {
     [Table("users")]
     public partial class User
@@ -34,9 +34,9 @@ namespace Models
         [StringLength(255)]
         public string Password { get; set; }
         [Column("email_verified")]
-        public decimal EmailVerified { get; set; }
+        public bool EmailVerified { get; set; }
         [Column("phone_verified")]
-        public decimal PhoneVerified { get; set; }
+        public bool PhoneVerified { get; set; }
         [Required]
         [Column("first_name")]
         [StringLength(255)]
@@ -45,14 +45,14 @@ namespace Models
         [Column("last_name")]
         [StringLength(255)]
         public string LastName { get; set; }
+        [Column("is_admin")]
+        public bool IsAdmin { get; set; }
         [Required]
         [Column("locale")]
         [StringLength(6)]
         public string Locale { get; set; }
         [Column("created")]
         public DateTime Created { get; set; }
-        [Column("is_admin")]
-        public bool IsAdmin { get; set; }
 
         [InverseProperty(nameof(Favorite.UsernameNavigation))]
         public virtual ICollection<Favorite> Favorites { get; set; }

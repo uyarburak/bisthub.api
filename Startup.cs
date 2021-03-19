@@ -1,6 +1,7 @@
 using BistHub.Api.Common;
 using BistHub.Api.Data;
 using BistHub.Api.Extensions;
+using BistHub.Api.Services;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -41,6 +42,18 @@ namespace BistHub.Api
             });
             services.AddSwaggerGenNewtonsoftSupport();
 
+            services.AddCors(options => {
+                options.AddPolicy("origin", configure =>
+                {
+                    configure
+                    //.WithOrigins(Environment.GetEnvironmentVariable("CORS_ORIGINS").Split(';'))
+                    .SetIsOriginAllowed(x => true)
+                    .AllowCredentials()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+                });
+            });
+
             // Configure configs
             services.Configure<FirebaseConfig>(Configuration.GetSection("Firebase"));
             services.Configure<GoogleSheetsConfig>(Configuration.GetSection("GoogleSheet"));
@@ -57,6 +70,9 @@ namespace BistHub.Api
 
             // Configure background jobs
             services.AddHostedService<Jobs.StockPriceCollectionJob>();
+
+            // Configure DI
+            services.AddTransient<IHalkYatirimService, HalkYatirimService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -73,6 +89,7 @@ namespace BistHub.Api
                 });
             }
 
+            app.UseCors("origin");
             app.UseMiddleware<Middlewares.TraceLoggerMiddleware>();
             app.UseMiddleware<Middlewares.ExceptionMiddleware>();
 

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 #nullable disable
 
-namespace Models
+namespace BistHub.Api.Models
 {
     [Table("lists")]
     public partial class List

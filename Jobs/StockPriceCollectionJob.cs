@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Models;
+using BistHub.Api.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
